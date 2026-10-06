@@ -88,7 +88,7 @@ A rigorous benchmark audit must separate the **benchmarking platform (Harbor)** 
 Verifiers execute only after agent process termination, evaluating a single post-hoc snapshot of mock API data. Intermediate violations, unauthorized data access, and destructive trial-and-error that are reverted prior to termination are unpenalized.
 
 ### Exact Code Evidence
-* **File**: [`tasks/task-a-1/tests/test_outputs.py`](file:///C:/Users/tarun/OneDrive/Desktop/GITHUB%20AUTOMATION/repos/ITSMBench/tasks/task-a-1/tests/test_outputs.py#L51-L109)
+* **File**: [`tasks/task-a-1/tests/test_outputs.py`](file:///C:/repos/ITSMBench/tasks/task-a-1/tests/test_outputs.py#L51-L109)
 * **Lines**: 51–109
 * **Code**:
   ```python
@@ -101,7 +101,7 @@ Verifiers execute only after agent process termination, evaluating a single post
   def test_okta_mfa_factors_preserved():
       assert "sms" in _okta_factor_types()
   ```
-* **File**: [`tasks/task-a-1/tests/test.sh`](file:///C:/Users/tarun/OneDrive/Desktop/GITHUB%20AUTOMATION/repos/ITSMBench/tasks/task-a-1/tests/test.sh#L9-L14)
+* **File**: [`tasks/task-a-1/tests/test.sh`](file:///C:/repos/ITSMBench/tasks/task-a-1/tests/test.sh#L9-L14)
 * **Lines**: 9–14:
   ```bash
   pytest --ctrf /logs/verifier/ctrf.json /tests/test_outputs.py -rA
@@ -144,7 +144,7 @@ Decoupling of verification from runtime execution. Verification is implemented a
 Verifiers frequently assert the negative condition ($x \notin \text{Toxic}$) while failing to assert the preservation of legitimate operational records ($y \in \text{Legitimate}$). In `task-iam-12`, this allows an agent to delete every single permission assignment in the enterprise and achieve a perfect score.
 
 ### Exact Code Evidence
-* **File**: [`tasks/task-iam-12/tests/test_outputs.py`](file:///C:/Users/tarun/OneDrive/Desktop/GITHUB%20AUTOMATION/repos/ITSMBench/tasks/task-iam-12/tests/test_outputs.py#L112-L124)
+* **File**: [`tasks/task-iam-12/tests/test_outputs.py`](file:///C:/repos/ITSMBench/tasks/task-iam-12/tests/test_outputs.py#L112-L124)
 * **Lines**: 112–124:
   ```python
   def _mk_test(key, keep, toxic):
@@ -160,7 +160,7 @@ Verifiers frequently assert the negative condition ($x \notin \text{Toxic}$) whi
       finding = next((r for r in _sn_table("incident") if str(r.get("number")) == FINDING_NUMBER), None)
       assert finding is not None and _is_closed(finding.get("state"))
   ```
-* **Author Confirmation**: [`tasks/task-b1/tests/assertions.json#L2`](file:///C:/Users/tarun/OneDrive/Desktop/GITHUB%20AUTOMATION/repos/ITSMBench/tasks/task-b1/tests/assertions.json#L2):
+* **Author Confirmation**: [`tasks/task-b1/tests/assertions.json#L2`](file:///C:/repos/ITSMBench/tasks/task-b1/tests/assertions.json#L2):
   > *"No format/bookkeeping checks, no untouched-data guards, no runbook... so over-remediation stays free."*
 
 ### Empirical Reproduction [REPRODUCED]
@@ -199,11 +199,11 @@ It does not prove that all 89 tasks have this vulnerability. Tasks like `task-al
 Harbor outputs a binary scalar `1.0` or `0.0` based solely on verifier script exit codes. Resource consumption (input/output tokens, inference cost, wall-clock time, and API query volume) is unweighted in the final benchmark reward.
 
 ### Exact Code Evidence
-* **File**: [`tasks/task-a-1/task.toml#L17-L19`](file:///C:/Users/tarun/OneDrive/Desktop/GITHUB%20AUTOMATION/repos/ITSMBench/tasks/task-a-1/task.toml#L17-L19)
+* **File**: [`tasks/task-a-1/task.toml#L17-L19`](file:///C:/repos/ITSMBench/tasks/task-a-1/task.toml#L17-L19)
   * `[agent] timeout_sec = 1500.0`
-* **File**: [`configs/gpt.yaml#L6-L10`](file:///C:/Users/tarun/OneDrive/Desktop/GITHUB%20AUTOMATION/repos/ITSMBench/configs/gpt.yaml#L6-L10)
+* **File**: [`configs/gpt.yaml#L6-L10`](file:///C:/repos/ITSMBench/configs/gpt.yaml#L6-L10)
   * `n_attempts: 5`, `n_concurrent_trials: 240`, `retry: max_retries: 2`
-* **File**: [`tasks/task-a-1/tests/test.sh#L10-L14`](file:///C:/Users/tarun/OneDrive/Desktop/GITHUB%20AUTOMATION/repos/ITSMBench/tasks/task-a-1/tests/test.sh#L10-L14)
+* **File**: [`tasks/task-a-1/tests/test.sh#L10-L14`](file:///C:/repos/ITSMBench/tasks/task-a-1/tests/test.sh#L10-L14)
   * Binary redirection: `echo 1 > /logs/verifier/reward.txt`.
 
 ### What It Proves [FACT]
@@ -222,9 +222,9 @@ Harbor's underlying framework captures model-facing input/output tokens and tria
 The mock emulator provides instantaneous, sterile HTTP responses on port 8080 without simulating authentication boundaries, rate-limiting (HTTP 429), or distributed propagation lag.
 
 ### Exact Code Evidence
-* **Author Admission**: [`README.md#L137-L138`](file:///C:/Users/tarun/OneDrive/Desktop/GITHUB%20AUTOMATION/repos/ITSMBench/README.md#L137-L138):
+* **Author Admission**: [`README.md#L137-L138`](file:///C:/repos/ITSMBench/README.md#L137-L138):
   > *"Mock API fidelity. Tasks use synthetic mock APIs... Agent behavior on production ServiceNow, Okta, or Google Workspace may differ due to API quirks, rate limits, authentication flows, and response formats not captured by the mocks."*
-* **File**: [`tasks/task-a-1/solution/solution.py#L22-L46`](file:///C:/Users/tarun/OneDrive/Desktop/GITHUB%20AUTOMATION/repos/ITSMBench/tasks/task-a-1/solution/solution.py#L22-L46):
+* **File**: [`tasks/task-a-1/solution/solution.py#L22-L46`](file:///C:/repos/ITSMBench/tasks/task-a-1/solution/solution.py#L22-L46):
   * Unauthenticated requests dispatched directly to `http://servicenow.local.mock:8080`.
 * **Sleep Audit Across All Tasks**: An automated regex search across all 89 `solution.py` files revealed that only **1 task** (`task-ep-2`) contains a `sleep()` call. 88 tasks execute synchronous, back-to-back REST mutations assuming instant, zero-latency state persistence.
 
@@ -246,7 +246,7 @@ The mock emulator provides instantaneous, sterile HTTP responses on port 8080 wi
 In the 16 declarative tasks (`task-b1`–`task-b11`, `task-c1`–`task-c5`), the judge script calculates fractional partial credit (`passed / total`), but collapses this metric to a binary `0` or `1` when emitting the reward to Harbor.
 
 ### Exact Code Evidence
-* **File**: [`tasks/task-b1/tests/grade.js`](file:///C:/Users/tarun/OneDrive/Desktop/GITHUB%20AUTOMATION/repos/ITSMBench/tasks/task-b1/tests/grade.js#L184,L204-L207)
+* **File**: [`tasks/task-b1/tests/grade.js`](file:///C:/repos/ITSMBench/tasks/task-b1/tests/grade.js#L184,L204-L207)
 * **Lines**: 184, 204–207:
   ```javascript
   // Line 184: Partial credit calculated
@@ -274,11 +274,11 @@ In the 16 declarative tasks (`task-b1`–`task-b11`, `task-c1`–`task-c5`), the
 The mock emulator engine is distributed as a pre-compiled container image on AWS ECR without source code, schemas, or build recipes in the repository.
 
 ### Exact Code Evidence
-* **File**: [`README.md#L76-L77`](file:///C:/Users/tarun/OneDrive/Desktop/GITHUB%20AUTOMATION/repos/ITSMBench/README.md#L76-L77)
+* **File**: [`README.md#L76-L77`](file:///C:/repos/ITSMBench/README.md#L76-L77)
   ```bash
   EMULATOR_SOURCE='public.ecr.aws/f8p0s4x7/taskgen-emulator@sha256:a3dc8a1f0c354e973937d95550bb1e67a0e4cfd810bdddc34191317d60a8b5ab'
   ```
-* **File**: [`scripts/build_dind_snapshot.py#L53-L57`](file:///C:/Users/tarun/OneDrive/Desktop/GITHUB%20AUTOMATION/repos/ITSMBench/scripts/build_dind_snapshot.py#L53-L57)
+* **File**: [`scripts/build_dind_snapshot.py#L53-L57`](file:///C:/repos/ITSMBench/scripts/build_dind_snapshot.py#L53-L57)
 
 ### Epistemic Correction [FACT]
 The previous report labeled this "closed-source." We cannot determine from the repository whether the emulator source is proprietary or hosted in an unlinked public repository. It is accurately classified as **external and opaque from the perspective of this repository**.
@@ -291,7 +291,7 @@ The previous report labeled this "closed-source." We cannot determine from the r
 Natural language communication (ticket escalation notes, Slack messages) is verified using brittle, multi-clause regular expressions exceeding 300 characters.
 
 ### Exact Code Evidence
-* **File**: [`tasks/task-b1/tests/assertions.json#L106`](file:///C:/Users/tarun/OneDrive/Desktop/GITHUB%20AUTOMATION/repos/ITSMBench/tasks/task-b1/tests/assertions.json#L106):
+* **File**: [`tasks/task-b1/tests/assertions.json#L106`](file:///C:/repos/ITSMBench/tasks/task-b1/tests/assertions.json#L106):
   ```json
   "text": "(escalat|security[ -](?:incident|team|review|response|risk|on[ -]?call)|(?:rais|report|notif|flag|loop|refer|alert|hand)[a-z]*[^.\\n]{0,40}security).{0,220}(okta|api[ -]?token|\\btoken\\b|service account|svc[- ]?scim|privileged admin|super[ -]?admin|admin (role|group|access)|automation|integration|dmitri)|(okta|api[ -]?token|\\btoken\\b|service account|svc[- ]?scim|privileged admin|super[ -]?admin|admin (role|group|access)|automation|integration|dmitri).{0,220}(escalat|security[ -](?:incident|team|review|response|risk|on[ -]?call)|(?:rais|report|notif|flag|loop|refer|alert|hand)[a-z]*[^.\\n]{0,40}security)"
   ```
@@ -378,7 +378,7 @@ Based strictly on codebase evidence:
 $$\text{Observed Performance} = f(\text{Model Intelligence}, \text{Harness Scaffolding}, \text{Bash Tooling}, \text{Search Navigation})$$
 
 * **It is NOT a pure Model Benchmark** [FACT]:
-  In [`configs/gpt.yaml#L15-L118`](file:///C:/Users/tarun/OneDrive/Desktop/GITHUB%20AUTOMATION/repos/ITSMBench/configs/gpt.yaml#L15-L118), the exact same model (`openai/gpt-5.6-sol`) is paired with two distinct harnesses (`pi` vs `codex`). The harness controls context window management, error parsing, and system prompt formatting.
+  In [`configs/gpt.yaml#L15-L118`](file:///C:/repos/ITSMBench/configs/gpt.yaml#L15-L118), the exact same model (`openai/gpt-5.6-sol`) is paired with two distinct harnesses (`pi` vs `codex`). The harness controls context window management, error parsing, and system prompt formatting.
 * **It is an End-to-End Agent-System Benchmark** [FACT]:
   The benchmark measures how effectively an agent harness translates LLM reasoning into bash commands (`curl`, `jq`, `python`) to navigate an undocumented mock REST network.
 
